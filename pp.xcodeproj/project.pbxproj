@@ -36,6 +36,7 @@
 		B0AB625E2CF8E9F200A1CC5A /* YourTripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB625D2CF8E9F200A1CC5A /* YourTripView.swift */; };
 		B0AB62602CF8F82E00A1CC5A /* TranslatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB625F2CF8F82E00A1CC5A /* TranslatorViewModel.swift */; };
 		B0AB62622CF8F86B00A1CC5A /* TranslatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */; };
+		B0BD269B2D021FA300808CDB /* SuggestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BD269A2D021FA300808CDB /* SuggestionsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +69,7 @@
 		B0AB625D2CF8E9F200A1CC5A /* YourTripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourTripView.swift; sourceTree = "<group>"; };
 		B0AB625F2CF8F82E00A1CC5A /* TranslatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorViewModel.swift; sourceTree = "<group>"; };
 		B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorView.swift; sourceTree = "<group>"; };
+		B0BD269A2D021FA300808CDB /* SuggestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +150,7 @@
 				B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */,
 				B00427AB2D00FBE4005242E2 /* ChatBotView.swift */,
 				B00427AD2D00FE24005242E2 /* DetailView.swift */,
+				B0BD269A2D021FA300808CDB /* SuggestionsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 				B084146E2CEFF37100E8078A /* ResetPasswordView.swift in Sources */,
 				B084145E2CEFC98900E8078A /* UpdateProfileViewModel.swift in Sources */,
 				B08414622CEFD2C200E8078A /* SignUpView.swift in Sources */,
+				B0BD269B2D021FA300808CDB /* SuggestionsView.swift in Sources */,
 				B00427AE2D00FE24005242E2 /* DetailView.swift in Sources */,
 				B084143C2CEFA7BF00E8078A /* ContentView.swift in Sources */,
 				B08414702CEFFD4400E8078A /* OTPVerificationSheet.swift in Sources */,
