@@ -33,6 +33,7 @@
 		B084146C2CEFF36600E8078A /* ResetPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B084146B2CEFF36600E8078A /* ResetPasswordViewModel.swift */; };
 		B084146E2CEFF37100E8078A /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B084146D2CEFF37100E8078A /* ResetPasswordView.swift */; };
 		B08414702CEFFD4400E8078A /* OTPVerificationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B084146F2CEFFD4400E8078A /* OTPVerificationSheet.swift */; };
+		B0940A5A2D026784000F94B4 /* TranslaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0940A592D026784000F94B4 /* TranslaterViewModel.swift */; };
 		B0AB625E2CF8E9F200A1CC5A /* YourTripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB625D2CF8E9F200A1CC5A /* YourTripView.swift */; };
 		B0AB62602CF8F82E00A1CC5A /* TranslatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB625F2CF8F82E00A1CC5A /* TranslatorViewModel.swift */; };
 		B0AB62622CF8F86B00A1CC5A /* TranslatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */; };
@@ -66,6 +67,7 @@
 		B084146B2CEFF36600E8078A /* ResetPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewModel.swift; sourceTree = "<group>"; };
 		B084146D2CEFF37100E8078A /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		B084146F2CEFFD4400E8078A /* OTPVerificationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPVerificationSheet.swift; sourceTree = "<group>"; };
+		B0940A592D026784000F94B4 /* TranslaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslaterViewModel.swift; sourceTree = "<group>"; };
 		B0AB625D2CF8E9F200A1CC5A /* YourTripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourTripView.swift; sourceTree = "<group>"; };
 		B0AB625F2CF8F82E00A1CC5A /* TranslatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorViewModel.swift; sourceTree = "<group>"; };
 		B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorView.swift; sourceTree = "<group>"; };
@@ -147,8 +149,8 @@
 				B084146F2CEFFD4400E8078A /* OTPVerificationSheet.swift */,
 				B08414672CEFF14200E8078A /* OTPVerificationView.swift */,
 				B0AB625D2CF8E9F200A1CC5A /* YourTripView.swift */,
-				B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */,
 				B00427AB2D00FBE4005242E2 /* ChatBotView.swift */,
+				B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */,
 				B00427AD2D00FE24005242E2 /* DetailView.swift */,
 				B0BD269A2D021FA300808CDB /* SuggestionsView.swift */,
 			);
@@ -164,6 +166,7 @@
 				B08414652CEFEE6500E8078A /* ForgotPasswordViewModel.swift */,
 				B08414692CEFF15700E8078A /* OTPVerificationViewModel.swift */,
 				B084146B2CEFF36600E8078A /* ResetPasswordViewModel.swift */,
+				B0940A592D026784000F94B4 /* TranslaterViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0940A5A2D026784000F94B4 /* TranslaterViewModel.swift in Sources */,
 				B084145A2CEFB75000E8078A /* ProfileView.swift in Sources */,
 				B08414432CEFA7C000E8078A /* Persistence.swift in Sources */,
 				B0AB62602CF8F82E00A1CC5A /* TranslatorViewModel.swift in Sources */,

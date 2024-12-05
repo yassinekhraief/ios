@@ -54,6 +54,22 @@ struct ProfileView: View {
                         .padding(.horizontal, 30)
                         .padding(.bottom, 90)
                         .padding(.top, 30)
+                        
+                        
+                        NavigationLink(destination: TranslatorView()) {
+                            Text("Translator")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(LinearGradient(gradient: Gradient(colors: [.mint, .blue]), startPoint: .leading, endPoint: .trailing))
+                                .cornerRadius(30)
+                                .shadow(radius: 10)
+                                .scaleEffect(1.05)
+                        }
+                        .padding(.horizontal, 30)
+                        .padding(.bottom, 90)
+                        .padding(.top, 30)
 
                         Spacer()
 

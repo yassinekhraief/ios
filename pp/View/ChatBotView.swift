@@ -234,7 +234,7 @@ struct ChatBotView: View {
         // Trigger navigation to the suggestions view
         navigateToSuggestions = true
     }
-    
+    	
     struct Message: Identifiable {
         var id = UUID()
         var text: String
