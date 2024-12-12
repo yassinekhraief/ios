@@ -38,6 +38,7 @@
 		B0AB62602CF8F82E00A1CC5A /* TranslatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB625F2CF8F82E00A1CC5A /* TranslatorViewModel.swift */; };
 		B0AB62622CF8F86B00A1CC5A /* TranslatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */; };
 		B0BD269B2D021FA300808CDB /* SuggestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BD269A2D021FA300808CDB /* SuggestionsView.swift */; };
+		B0FC4D8D2D0B858300C28CD9 /* i.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FC4D8C2D0B858300C28CD9 /* i.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		B0AB625F2CF8F82E00A1CC5A /* TranslatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorViewModel.swift; sourceTree = "<group>"; };
 		B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorView.swift; sourceTree = "<group>"; };
 		B0BD269A2D021FA300808CDB /* SuggestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsView.swift; sourceTree = "<group>"; };
+		B0FC4D8C2D0B858300C28CD9 /* i.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = i.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +155,7 @@
 				B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */,
 				B00427AD2D00FE24005242E2 /* DetailView.swift */,
 				B0BD269A2D021FA300808CDB /* SuggestionsView.swift */,
+				B0FC4D8C2D0B858300C28CD9 /* i.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				B08414542CEFA8E900E8078A /* LoginView.swift in Sources */,
 				B0AB62622CF8F86B00A1CC5A /* TranslatorView.swift in Sources */,
 				B084146E2CEFF37100E8078A /* ResetPasswordView.swift in Sources */,
+				B0FC4D8D2D0B858300C28CD9 /* i.swift in Sources */,
 				B084145E2CEFC98900E8078A /* UpdateProfileViewModel.swift in Sources */,
 				B08414622CEFD2C200E8078A /* SignUpView.swift in Sources */,
 				B0BD269B2D021FA300808CDB /* SuggestionsView.swift in Sources */,
