@@ -39,6 +39,10 @@
 		B0AB62622CF8F86B00A1CC5A /* TranslatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */; };
 		B0BD269B2D021FA300808CDB /* SuggestionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BD269A2D021FA300808CDB /* SuggestionsView.swift */; };
 		B0FC4D8D2D0B858300C28CD9 /* i.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FC4D8C2D0B858300C28CD9 /* i.swift */; };
+		B0FC4D8F2D0BA44D00C28CD9 /* TripViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FC4D8E2D0BA44D00C28CD9 /* TripViewModel.swift */; };
+		B0FC4D912D0BA48700C28CD9 /* TripPlanificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FC4D902D0BA48700C28CD9 /* TripPlanificationView.swift */; };
+		B0FC4D932D0BA4EC00C28CD9 /* TripPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FC4D922D0BA4EC00C28CD9 /* TripPlannerView.swift */; };
+		B0FC4D952D0BA52100C28CD9 /* TripModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FC4D942D0BA52100C28CD9 /* TripModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +78,10 @@
 		B0AB62612CF8F86B00A1CC5A /* TranslatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslatorView.swift; sourceTree = "<group>"; };
 		B0BD269A2D021FA300808CDB /* SuggestionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsView.swift; sourceTree = "<group>"; };
 		B0FC4D8C2D0B858300C28CD9 /* i.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = i.swift; sourceTree = "<group>"; };
+		B0FC4D8E2D0BA44D00C28CD9 /* TripViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripViewModel.swift; sourceTree = "<group>"; };
+		B0FC4D902D0BA48700C28CD9 /* TripPlanificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripPlanificationView.swift; sourceTree = "<group>"; };
+		B0FC4D922D0BA4EC00C28CD9 /* TripPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripPlannerView.swift; sourceTree = "<group>"; };
+		B0FC4D942D0BA52100C28CD9 /* TripModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				B084144F2CEFA82600E8078A /* User.swift */,
+				B0FC4D942D0BA52100C28CD9 /* TripModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -156,6 +165,8 @@
 				B00427AD2D00FE24005242E2 /* DetailView.swift */,
 				B0BD269A2D021FA300808CDB /* SuggestionsView.swift */,
 				B0FC4D8C2D0B858300C28CD9 /* i.swift */,
+				B0FC4D902D0BA48700C28CD9 /* TripPlanificationView.swift */,
+				B0FC4D922D0BA4EC00C28CD9 /* TripPlannerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -170,6 +181,7 @@
 				B08414692CEFF15700E8078A /* OTPVerificationViewModel.swift */,
 				B084146B2CEFF36600E8078A /* ResetPasswordViewModel.swift */,
 				B0940A592D026784000F94B4 /* TranslaterViewModel.swift */,
+				B0FC4D8E2D0BA44D00C28CD9 /* TripViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -260,6 +272,7 @@
 				B084146E2CEFF37100E8078A /* ResetPasswordView.swift in Sources */,
 				B0FC4D8D2D0B858300C28CD9 /* i.swift in Sources */,
 				B084145E2CEFC98900E8078A /* UpdateProfileViewModel.swift in Sources */,
+				B0FC4D912D0BA48700C28CD9 /* TripPlanificationView.swift in Sources */,
 				B08414622CEFD2C200E8078A /* SignUpView.swift in Sources */,
 				B0BD269B2D021FA300808CDB /* SuggestionsView.swift in Sources */,
 				B00427AE2D00FE24005242E2 /* DetailView.swift in Sources */,
@@ -268,12 +281,15 @@
 				B08414682CEFF14200E8078A /* OTPVerificationView.swift in Sources */,
 				B00427AC2D00FBE4005242E2 /* ChatBotView.swift in Sources */,
 				B084146C2CEFF36600E8078A /* ResetPasswordViewModel.swift in Sources */,
+				B0FC4D8F2D0BA44D00C28CD9 /* TripViewModel.swift in Sources */,
 				B08414522CEFA8BC00E8078A /* LoginViewModel.swift in Sources */,
 				B084143A2CEFA7BF00E8078A /* ppApp.swift in Sources */,
+				B0FC4D932D0BA4EC00C28CD9 /* TripPlannerView.swift in Sources */,
 				B08414642CEFED5E00E8078A /* ForgotPasswordView.swift in Sources */,
 				B08414502CEFA82600E8078A /* User.swift in Sources */,
 				9AAE2E5A2CF7680A00D7D21C /* APIKey.swift in Sources */,
 				B084146A2CEFF15700E8078A /* OTPVerificationViewModel.swift in Sources */,
+				B0FC4D952D0BA52100C28CD9 /* TripModel.swift in Sources */,
 				B08414662CEFEE6500E8078A /* ForgotPasswordViewModel.swift in Sources */,
 				B0AB625E2CF8E9F200A1CC5A /* YourTripView.swift in Sources */,
 				B08414462CEFA7C000E8078A /* pp.xcdatamodeld in Sources */,
