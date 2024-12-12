@@ -9,7 +9,7 @@ class SignUpViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     @Published var successMessage: String? = nil
 
-    private let signupURL = URL(string: "https://425b-197-3-6-252.ngrok-free.app/user/signup")!
+    private let signupURL = URL(string: "https://c3f1-196-236-142-123.ngrok-free.app/user/signup")!
 
     func signUp() {
         // Debugging print statement

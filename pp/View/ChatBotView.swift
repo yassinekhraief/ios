@@ -3,14 +3,17 @@ import GoogleGenerativeAI
 
 let model = GenerativeModel(name: "gemini-pro", apiKey: APIKey.default)
 
+// Add Unsplash API key
+let unsplashAPIKey = "dxX8n-AfqAICDNcqYOOn7CDs5NPGKRP-47pqyyjtfw8" // Replace with your Unsplash API key
+
 struct ChatBotView: View {
     @State private var messages: [Message] = []
     @State private var userInput = ""
     @State private var isLoading = false
     @State private var conversationContext = "" // Stores context for the conversation with Gemini API
     @State private var navigateToSuggestions = false
-    @State private var suggestions: [String] = []  // Array to store the AI-generated suggestions
-    // State to store the user's travel details
+    @State private var suggestions: [PlaceSuggestion] = [] // Array to store AI-generated suggestions with images
+    
     @State private var country: String = ""
     @State private var travelDate: String = ""
     @State private var durationDays: String = ""
@@ -19,7 +22,6 @@ struct ChatBotView: View {
     @State private var isConfirmationRequired = false // Flag to determine if confirmation is required
     @State private var confirmationMessage: String = "" // To store the confirmation message
     @State private var askingQuestion = "" // To track which question we are currently asking
-    
     
     var body: some View {
         NavigationView {
@@ -101,7 +103,6 @@ struct ChatBotView: View {
                     .disabled(userInput.isEmpty)
                 }
                 
-                // NavigationLink for transitioning to SuggestionsView
                 NavigationLink(
                     destination: SuggestionsView(
                         country: country,
@@ -125,7 +126,7 @@ struct ChatBotView: View {
     func startConversation() {
         let initialMessage = "Hi! Let's plan your trip. Where would you like to go?"
         messages.append(Message(text: initialMessage, isUser: false))
-        conversationContext = "" // Reset conversation context
+        conversationContext = "" // Reset  aconversation context
         askingQuestion = "country"
     }
     
@@ -136,7 +137,6 @@ struct ChatBotView: View {
         // Add the user's message to the chat
         messages.append(Message(text: userMessage, isUser: true))
         
-        // Update the appropriate state variable based on the current question
         switch askingQuestion {
         case "country":
             country = userMessage
@@ -150,15 +150,12 @@ struct ChatBotView: View {
             break
         }
         
-        // Show loading spinner while waiting for AI's response or moving to the next question
         isLoading = true
         
         do {
-            // Simulate AI response logic
-            isLoading = false // Turn off loading state
+            isLoading = false
             await handleConversation(responseText: userMessage)
         } catch {
-            // Handle errors, if any
             isLoading = false
             messages.append(Message(text: "Sorry, something went wrong. Please try again.", isUser: false))
         }
@@ -182,34 +179,51 @@ struct ChatBotView: View {
             askingQuestion = "generatePlaces"
             messages.append(Message(text: "Generating places based on your preferences...", isUser: false))
             
-            // Generate places using the AI model
             await generatePlaces()
         }
     }
     
     func generatePlaces() async {
         let prompt = """
-        Suggest 3 travel destinations for a \(placeType) in \(country) that would be ideal for a trip of \(durationDays) days. \
-        Provide brief descriptions for each destination.
+        Suggest travel destinations for a \(placeType) in \(country) that would be ideal for a trip of \(durationDays) days.
         """
         
         do {
             isLoading = true
-            // Call the AI model with the constructed prompt
             let response = try await model.generateContent(prompt)
             isLoading = false
             
             if let responseText = response.text {
-                // Split the response into suggestions
-                suggestions = responseText.split(separator: "\n").map { String($0) }
+                // Parse the response into place suggestions
+                let placeNames = responseText.split(separator: "\n").map { String($0) }
                 
-                // Display AI suggestions as chat messages
-                messages.append(Message(text: "Here are some \(placeType) destinations for you:", isUser: false))
-                for suggestion in suggestions {
-                    messages.append(Message(text: suggestion, isUser: false))
+                // Fetch images in parallel using TaskGroup
+                let fetchedImages = await withTaskGroup(of: (String, String).self) { group in
+                    var results: [(String, String)] = []
+                    
+                    for place in placeNames {
+                        group.addTask {
+                            let imageUrl = await fetchImageURL(for: place)
+                            return (place, imageUrl)
+                        }
+                    }
+                    
+                    // Collect the results
+                    for await result in group {
+                        results.append(result)
+                    }
+                    
+                    return results
                 }
                 
-                // Proceed to confirmation
+                // Map the fetched results to place suggestions
+                suggestions = fetchedImages.map { PlaceSuggestion(name: $0.0, imageName: $0.1) }
+                
+                messages.append(Message(text: "Here are some destinations for you:", isUser: false))
+                for suggestion in suggestions {
+                    messages.append(Message(text: suggestion.name, isUser: false))
+                }
+                
                 askingQuestion = "confirmation"
                 isConfirmationRequired = true
             }
@@ -219,31 +233,105 @@ struct ChatBotView: View {
         }
     }
     
-    func sendToBackend() {
-        print("Sending the following information to the backend:")
-        print("Country: \(country)")
-        print("Travel Date: \(travelDate)")
-        print("Duration: \(durationDays) days")
-        print("Type of Place: \(placeType)")
+    func fetchImageURL(for place: String) async -> String {
+        // Ensure the place name is URL-encoded to handle spaces and special characters
+        let encodedPlace = place.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? place
+        let urlString = "https://api.unsplash.com/photos/random?query=\(encodedPlace)&client_id=\(unsplashAPIKey)"
         
-        // Send dynamic suggestions to the backend
-        suggestions.forEach { suggestion in
-            print(suggestion)
+        print("Requesting Unsplash URL: \(urlString)") // Log the full request URL
+        
+        guard let url = URL(string: urlString) else {
+            // Log and provide fallback behavior instead of crashing
+            print("Error: Invalid Unsplash API URL for place: \(place)")
+            return "https://via.placeholder.com/150" // Fallback image URL
         }
         
-        // Trigger navigation to the suggestions view
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            
+            // Log the response data
+            print("Received data from Unsplash API: \(String(data: data, encoding: .utf8) ?? "")")
+            
+            if let images = try? JSONDecoder().decode([UnsplashImage].self, from: data),
+               let imageUrl = images.first?.urls.thumb { // Use smaller image version
+                return imageUrl
+            }
+        } catch {
+            // Log the error and provide a fallback image
+            print("Error: Failed to fetch image for place: \(place), Error: \(error)")
+        }
+        
+        // Fallback behavior if the image cannot be fetched
+        return "https://via.placeholder.com/150" // Fallback image URL
+    }
+
+    func sendToBackend() {
+        print("Sending details to backend...")
         navigateToSuggestions = true
     }
-    	
+    
     struct Message: Identifiable {
         var id = UUID()
         var text: String
         var isUser: Bool
     }
     
-    struct ChatBotViewPreview: PreviewProvider {
-        static var previews: some View {
-            ChatBotView()
+    struct PlaceSuggestion: Identifiable {
+        var id = UUID()
+        var name: String
+        var imageName: String
+    }
+    
+    struct UnsplashImage: Decodable {
+        var urls: UnsplashImageURLs
+    }
+    
+    struct UnsplashImageURLs: Decodable {
+        var thumb: String // Fetch a smaller version
+    }
+    
+    struct SuggestionsView: View {
+        var country: String
+        var travelDate: String
+        var durationDays: String
+        var placeType: String
+        var suggestions: [PlaceSuggestion]
+        
+        var body: some View {
+            ScrollView {
+                ForEach(suggestions) { suggestion in
+                    VStack {
+                        AsyncImage(url: URL(string: suggestion.imageName)) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView() // Show loading spinner
+                                    .frame(maxHeight: .infinity)
+                            case .success(let image):
+                                image.resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 200)
+                            case .failure:
+                                Image(systemName: "photo") // Show a placeholder icon if the image fails to load
+                                    .resizable()
+                                    .frame(height: 200)
+                            @unknown default:
+                                EmptyView()
+                            }
+                        }
+                        Text(suggestion.name)
+                            .font(.headline)
+                            .padding()
+                    }
+                    .padding()
+                }
+            }
+            .navigationTitle("Suggestions")
         }
+    }
+}
+
+struct ChatBotViewPreview: PreviewProvider {
+    static var previews: some View {
+        ChatBotView()
     }
 }
