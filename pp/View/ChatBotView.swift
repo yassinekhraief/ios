@@ -3,8 +3,36 @@ import GoogleGenerativeAI
 
 let model = GenerativeModel(name: "gemini-pro", apiKey: APIKey.default)
 
-// Add Unsplash API key
-let unsplashAPIKey = "dxX8n-AfqAICDNcqYOOn7CDs5NPGKRP-47pqyyjtfw8" // Replace with your Unsplash API key
+import Foundation
+
+struct TravelDestination: Identifiable, Codable {
+    var id = UUID() // Unique ID for Identifiable conformance
+    var destination: String
+    var description: String
+    var imageUrl: String
+
+    enum CodingKeys: String, CodingKey {
+        case destination
+        case description
+        case imageUrl = "image" // Mapping "image" from the JSON to imageUrl in the model
+    }
+}
+
+
+struct TravelSuggestion: Identifiable {
+    let id = UUID() // Add a unique identifier
+    let destination: String
+    let description: String
+    let imageUrl: String? // Nullable imageUrl for cases where no image is provided
+}
+
+
+// Message model used for chat or feedback
+struct Message: Identifiable {
+    var id = UUID()
+    var text: String
+    var isUser: Bool
+}
 
 struct ChatBotView: View {
     @State private var messages: [Message] = []
@@ -12,8 +40,8 @@ struct ChatBotView: View {
     @State private var isLoading = false
     @State private var conversationContext = "" // Stores context for the conversation with Gemini API
     @State private var navigateToSuggestions = false
-    @State private var suggestions: [PlaceSuggestion] = [] // Array to store AI-generated suggestions with images
-    
+    @State private var suggestions: [TravelSuggestion] = []  // Array to store the AI-generated suggestions
+    // State to store the user's travel details
     @State private var country: String = ""
     @State private var travelDate: String = ""
     @State private var durationDays: String = ""
@@ -78,6 +106,56 @@ struct ChatBotView: View {
                         }
                         .padding()
                     }
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(suggestions) { suggestion in
+                                VStack {
+                                    Text(suggestion.destination)
+                                        .font(.headline)
+                                        .fontWeight(.bold)
+                                        .padding(.top, 8)
+                                        .padding(.horizontal)
+                                        .multilineTextAlignment(.center)
+                                    
+                                    Text(suggestion.description)
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                        .multilineTextAlignment(.center)
+                                        .frame(width: 200, height: 120)
+                                        .padding([.leading, .bottom, .trailing], 8)
+                                        .background(Color.white)
+                                        .cornerRadius(10)
+                                        .shadow(radius: 5)
+                                    
+                                    if let imageUrl = suggestion.imageUrl, let fixedUrl = fixUrl(imageUrl) {
+                                        AsyncImage(url: fixedUrl) { phase in
+                                            switch phase {
+                                            case .empty:
+                                                ProgressView()
+                                                    .progressViewStyle(CircularProgressViewStyle())
+                                                    .frame(width: 200, height: 120)
+                                            case .success(let image):
+                                                image.resizable()
+                                                    .scaledToFill()
+                                                    .frame(width: 200, height: 120)
+                                                    .cornerRadius(10)
+                                                    .clipped()
+                                            case .failure:
+                                                Text("Failed to load image")
+                                                    .foregroundColor(.red)
+                                            @unknown default:
+                                                Text("Unknown state")
+                                            }
+                                        }
+                                        .padding([.leading, .bottom, .trailing], 8)
+                                    }
+                                }
+                                .padding(.leading)
+                            }
+                        }
+                    }
+                    .padding(.top)
                 }
                 
                 Divider()
@@ -109,7 +187,7 @@ struct ChatBotView: View {
                         travelDate: travelDate,
                         durationDays: durationDays,
                         placeType: placeType,
-                        suggestions: suggestions
+                        suggestions: suggestions.map { $0.destination }
                     ),
                     isActive: $navigateToSuggestions
                 ) {
@@ -126,15 +204,13 @@ struct ChatBotView: View {
     func startConversation() {
         let initialMessage = "Hi! Let's plan your trip. Where would you like to go?"
         messages.append(Message(text: initialMessage, isUser: false))
-        conversationContext = "" // Reset  aconversation context
+        conversationContext = ""
         askingQuestion = "country"
     }
     
     func sendMessage() async {
         let userMessage = userInput
-        userInput = ""  // Clear input field after capturing the input
-        
-        // Add the user's message to the chat
+        userInput = ""
         messages.append(Message(text: userMessage, isUser: true))
         
         switch askingQuestion {
@@ -178,160 +254,98 @@ struct ChatBotView: View {
             placeType = responseText
             askingQuestion = "generatePlaces"
             messages.append(Message(text: "Generating places based on your preferences...", isUser: false))
-            
             await generatePlaces()
         }
     }
     
     func generatePlaces() async {
         let prompt = """
-        Suggest travel destinations for a \(placeType) in \(country) that would be ideal for a trip of \(durationDays) days.
+        Suggest \(durationDays) travel destinations for a \(placeType) in \(country) that would be ideal for a trip of \(durationDays) days. Provide a brief description and include a publicly accessible image URL sourced from the web (such as from Unsplash, Pexels, Pixabay, or any publicly available image database) for each day of the trip in valid JSON format. Each destination will be assigned to a specific day of the trip.
+
+        Example:
+
+        [
+          {
+            "day": 1,
+            "destination": "Example Destination 1",
+            "description": "A brief description of the destination for day 1.",
+            "image": "https://example.com/image1.jpg"
+          },
+          {
+            "day": 2,
+            "destination": "Example Destination 2",
+            "description": "A brief description of the destination for day 2.",
+            "image": "https://example.com/image2.jpg"
+          },
+          {
+            "day": 3,
+            "destination": "Example Destination 3",
+            "description": "A brief description of the destination for day 3.",
+            "image": "https://example.com/image3.jpg"
+          }
+        ]
         """
+
+        
         
         do {
             isLoading = true
             let response = try await model.generateContent(prompt)
             isLoading = false
-            
+
             if let responseText = response.text {
-                // Parse the response into place suggestions
-                let placeNames = responseText.split(separator: "\n").map { String($0) }
-                
-                // Fetch images in parallel using TaskGroup
-                let fetchedImages = await withTaskGroup(of: (String, String).self) { group in
-                    var results: [(String, String)] = []
-                    
-                    for place in placeNames {
-                        group.addTask {
-                            let imageUrl = await fetchImageURL(for: place)
-                            return (place, imageUrl)
-                        }
-                    }
-                    
-                    // Collect the results
-                    for await result in group {
-                        results.append(result)
-                    }
-                    
-                    return results
+                print("AI Response: \(responseText)") // Log raw AI response
+
+                // Check if the response is valid JSON and attempt to decode
+                if let data = responseText.data(using: .utf8) {
+                    let decoder = JSONDecoder()
+                    let destinations = try decoder.decode([TravelDestination].self, from: data)
+
+                    suggestions = destinations.map { TravelSuggestion(destination: $0.destination, description: $0.description, imageUrl: $0.imageUrl) }
+
+                    askingQuestion = "confirmation"
+                    isConfirmationRequired = true
+                } else {
+                    print("Failed to convert response to Data.")
                 }
-                
-                // Map the fetched results to place suggestions
-                suggestions = fetchedImages.map { PlaceSuggestion(name: $0.0, imageName: $0.1) }
-                
-                messages.append(Message(text: "Here are some destinations for you:", isUser: false))
-                for suggestion in suggestions {
-                    messages.append(Message(text: suggestion.name, isUser: false))
-                }
-                
-                askingQuestion = "confirmation"
-                isConfirmationRequired = true
+            } else {
+                print("No response from the AI.")
+                messages.append(Message(text: "No response from the AI. Please try again.", isUser: false))
             }
         } catch {
             isLoading = false
+            print("Error generating content: \(error.localizedDescription)")
             messages.append(Message(text: "Failed to generate suggestions. Please try again.", isUser: false))
         }
     }
+
+
     
-    func fetchImageURL(for place: String) async -> String {
-        // Ensure the place name is URL-encoded to handle spaces and special characters
-        let encodedPlace = place.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? place
-        let urlString = "https://api.unsplash.com/photos/random?query=\(encodedPlace)&client_id=\(unsplashAPIKey)"
-        
-        print("Requesting Unsplash URL: \(urlString)") // Log the full request URL
-        
+    func fixUrl(_ urlString: String) -> URL? {
         guard let url = URL(string: urlString) else {
-            // Log and provide fallback behavior instead of crashing
-            print("Error: Invalid Unsplash API URL for place: \(place)")
-            return "https://via.placeholder.com/150" // Fallback image URL
+            print("Invalid URL string: \(urlString)")
+            return nil
         }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            
-            // Log the response data
-            print("Received data from Unsplash API: \(String(data: data, encoding: .utf8) ?? "")")
-            
-            if let images = try? JSONDecoder().decode([UnsplashImage].self, from: data),
-               let imageUrl = images.first?.urls.thumb { // Use smaller image version
-                return imageUrl
-            }
-        } catch {
-            // Log the error and provide a fallback image
-            print("Error: Failed to fetch image for place: \(place), Error: \(error)")
-        }
-        
-        // Fallback behavior if the image cannot be fetched
-        return "https://via.placeholder.com/150" // Fallback image URL
+        return url
     }
 
     func sendToBackend() {
-        print("Sending details to backend...")
+        print("Sending the following information to the backend:")
+        print("Country: \(country)")
+        print("Travel Date: \(travelDate)")
+        print("Duration: \(durationDays) days")
+        print("Type of Place: \(placeType)")
+        
+        suggestions.forEach { suggestion in
+            print(suggestion)
+        }
+        
         navigateToSuggestions = true
     }
-    
-    struct Message: Identifiable {
-        var id = UUID()
-        var text: String
-        var isUser: Bool
-    }
-    
-    struct PlaceSuggestion: Identifiable {
-        var id = UUID()
-        var name: String
-        var imageName: String
-    }
-    
-    struct UnsplashImage: Decodable {
-        var urls: UnsplashImageURLs
-    }
-    
-    struct UnsplashImageURLs: Decodable {
-        var thumb: String // Fetch a smaller version
-    }
-    
-    struct SuggestionsView: View {
-        var country: String
-        var travelDate: String
-        var durationDays: String
-        var placeType: String
-        var suggestions: [PlaceSuggestion]
-        
-        var body: some View {
-            ScrollView {
-                ForEach(suggestions) { suggestion in
-                    VStack {
-                        AsyncImage(url: URL(string: suggestion.imageName)) { phase in
-                            switch phase {
-                            case .empty:
-                                ProgressView() // Show loading spinner
-                                    .frame(maxHeight: .infinity)
-                            case .success(let image):
-                                image.resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(height: 200)
-                            case .failure:
-                                Image(systemName: "photo") // Show a placeholder icon if the image fails to load
-                                    .resizable()
-                                    .frame(height: 200)
-                            @unknown default:
-                                EmptyView()
-                            }
-                        }
-                        Text(suggestion.name)
-                            .font(.headline)
-                            .padding()
-                    }
-                    .padding()
-                }
-            }
-            .navigationTitle("Suggestions")
-        }
-    }
-}
 
-struct ChatBotViewPreview: PreviewProvider {
-    static var previews: some View {
-        ChatBotView()
+    struct ChatBotViewPreview: PreviewProvider {
+        static var previews: some View {
+            ChatBotView()
+        }
     }
 }
