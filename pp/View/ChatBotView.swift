@@ -260,31 +260,23 @@ struct ChatBotView: View {
     
     func generatePlaces() async {
         let prompt = """
-        Suggest \(durationDays) travel destinations for a \(placeType) in \(country) that would be ideal for a trip of \(durationDays) days. Provide a brief description and include a publicly accessible image URL sourced from the web (such as from Unsplash, Pexels, Pixabay, or any publicly available image database) for each day of the trip in valid JSON format. Each destination will be assigned to a specific day of the trip.
+        Suggest \(durationDays) travel destinations for a \(placeType) in \(country) that would be ideal for a trip of \(durationDays) days. Provide a brief description and include an image URL for each day of the trip in valid JSON format. Use the following format for the image URL:
+        "https://image.pollinations.ai/prompt/generate%20an%20image%20of%20{destination}" where {destination} is the name of the travel destination.
 
-        Example:
+        Each destination should have the following format:
 
         [
           {
             "day": 1,
-            "destination": "Example Destination 1",
-            "description": "A brief description of the destination for day 1.",
-            "image": "https://example.com/image1.jpg"
+            "destination": "Destination Name",
+            "description": "A brief description of the destination for this day.",
+            "image": "https://image.pollinations.ai/prompt/generate%20an%20image%20of%20Destination Name"
           },
-          {
-            "day": 2,
-            "destination": "Example Destination 2",
-            "description": "A brief description of the destination for day 2.",
-            "image": "https://example.com/image2.jpg"
-          },
-          {
-            "day": 3,
-            "destination": "Example Destination 3",
-            "description": "A brief description of the destination for day 3.",
-            "image": "https://example.com/image3.jpg"
-          }
+          ...
         ]
         """
+
+
 
         
         
@@ -326,6 +318,7 @@ struct ChatBotView: View {
             print("Invalid URL string: \(urlString)")
             return nil
         }
+        print("valid URL string: \(urlString)")
         return url
     }
 

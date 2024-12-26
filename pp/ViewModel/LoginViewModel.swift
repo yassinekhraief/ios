@@ -12,7 +12,7 @@ class LoginViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     // URL for login endpoint
-    private let loginURL = URL(string: "https://8874-160-158-203-211.ngrok-free.app/user/login")!
+    private let loginURL = URL(string: "https://8f6a-197-3-6-252.ngrok-free.app/user/login")!
     
     // Call the login function
     func login() {
@@ -74,9 +74,9 @@ class LoginViewModel: ObservableObject {
             .receive(on: DispatchQueue.main) // Ensure UI updates happen on the main thread
             .sink { completion in
                 switch completion {
-                case .failure(let error):
+                case .failure(_):
                     // Handle failure scenario
-                    self.errorMessage = "Login failed: \(error.localizedDescription)"
+                    self.errorMessage = "wrong credentials: either wrong email or password"
                     self.isLoggedIn = false
                     self.isLoading = false
                 case .finished:
