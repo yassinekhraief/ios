@@ -12,7 +12,7 @@ class LoginViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     // URL for login endpoint
-    private let loginURL = URL(string: "https://8f6a-197-3-6-252.ngrok-free.app/user/login")!
+    private let loginURL = URL(string: "https://81d7-197-3-6-252.ngrok-free.app/user/login")!
     
     // Call the login function
     func login() {
